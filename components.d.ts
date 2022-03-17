@@ -23,6 +23,7 @@ declare module 'vue' {
     PokedexHeader: typeof import('./src/components/PokedexHeader.vue')['default']
     PokeMainContent: typeof import('./src/components/PokeMainContent.vue')['default']
     StatsValueDisplay: typeof import('./src/components/StatsComponent/StatsValueDisplay.vue')['default']
+    TypeTag: typeof import('./src/components/StatsComponent/TypeTag.vue')['default']
   }
 }
 

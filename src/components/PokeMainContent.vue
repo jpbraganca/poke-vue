@@ -8,17 +8,15 @@
       </el-row>
       <el-row align="middle" justify="center">
         <el-col>
-          <div :key="item.id" class="pokemon-name">{{ item.name }}</div>
+          <div :key="item.id" class="pokemon-name">{{ item.name.replace(/(\b[a-z](?!\s))/g, (c) => c.toUpperCase()) }}</div>
         </el-col>
       </el-row>
-      <el-row align="top" justify="start" class="stats-row" :gutter="30">
-        <el-col :xs="24" :sm="12" :md="{span:4, offset: 8}" class="image-col">
-          <div>
+      <el-row align="middle" justify="start" class="stats-row" :gutter="30">
+        <el-col :xs="24" :sm="12" :md="{span:10, offset: 2}" class="image-col">
             <img :src="item.sprites.other.dream_world.front_default"/>
-            <div class="ability-section-col" style="justify-content: center;">
-              <el-tag effect="dark" type="success"></el-tag>
+            <div class="type-tag pokemon-name">
+              <TypeTag :Types="item.types"/>
             </div>
-          </div>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" class="stats-section-col">
           <div class="standard-config">
@@ -26,13 +24,11 @@
           </div>
           <h2 class="section-label">Abilities</h2>
           <div class="standard-config">
-            <AbilityStats />
-            <AbilityStats />
+            <AbilityStats :Ability="item.abilities"/>
           </div>
           <h2 class="section-label">Stats</h2>
           <div class="standard-config" style="margin-bottom: 0px;">
-            <StatsValueDisplay />
-            <StatsValueDisplay />
+            <StatsValueDisplay  :statsData="item.stats" />
           </div>
         </el-col>
       </el-row>
@@ -40,7 +36,7 @@
         <el-col :xs="24" :sm="12" :md="{span:7, offset: 12}" class="stats-section-col">
           <div class="evolution-section">
             <h2 class="section-label">Evolution</h2>
-            <Evolution />
+            <Evolution :pokemonId="item.id"/>
           </div>
         </el-col>
       </el-row>
@@ -58,6 +54,8 @@ import GeneralStats from './StatsComponent/GeneralStats.vue'
 import AbilityStats from './StatsComponent/AbilityStats.vue'
 import StatsValueDisplay from './StatsComponent/StatsValueDisplay.vue'
 import Evolution from './StatsComponent/EvolutionComponent.vue'
+import TypeTag from './StatsComponent/TypeTag.vue'
+import { PokemonArray } from '../services/ApiRequest'
 
 //Data import
 // import { PokemonArray } from '../services/ApiRequest'
@@ -79,7 +77,8 @@ export default defineComponent({
     GeneralStats,
     AbilityStats,
     StatsValueDisplay,
-    Evolution
+    Evolution,
+    TypeTag
   },
 
   methods: {
@@ -93,6 +92,7 @@ export default defineComponent({
   },
 
   mounted() {
+    console.log(PokemonArray)
     this.getData();
   }
 })
@@ -138,9 +138,9 @@ h2 {
   flex-direction: column;
 }
 
-.ability-section-col {
+.type-tag {
   display: flex;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
   color: #525252;
   margin-bottom: 20px;
@@ -160,7 +160,9 @@ h2 {
 
 .image-col {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .image-col > img {
@@ -174,5 +176,12 @@ h2 {
   justify-content: center;
   flex-direction: column;
   margin-left: 5px;
+}
+
+@media (max-width: 960px) {
+  .stats-section-col, .evolution-section {
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>
