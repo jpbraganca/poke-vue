@@ -1,16 +1,14 @@
 <template>
-  <div v-if="pokemonId">
-    <div class="main-frame">
-      <div class="pokemon-evolution" v-for="(item, index) in sortedArray" :key="index">
-        {{item.name}}
-      </div>
+  <div class="main-frame">
+    <div class="pokemon-evolution" v-for="(pokemon, name) in Evolution" :key="name">
+      <img :src="pokemon.image" class="space-items" />
+      <span>{{pokemon.name}}</span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import axios from 'axios';
 
 import { Icon } from '@iconify/vue';
 
@@ -23,58 +21,30 @@ type EvolutionChain = {
 export default defineComponent({
   data() {
     return {
-      evolutionList: [] as Array<any>,
+      evolutionArray: [] as any[]
     }
   },
   components: {
     Icon,
   },
   props: {
-    pokemonId: Number,
+    Evolution: Array,
   },
   // computed: {
-  //   sortedArray(): any {
-  //     console.log(this.evolutionList.sort((a: any, b: any) => a.id - b.id));
-  //   },
-  // },
-  methods: {
-    async getEvolutionData() {
-
-      const pokemonSpecies = await axios.get('https://pokeapi.co/api/v2/pokemon-species/' + this.pokemonId);
-      const evolutionChain = await axios.get(pokemonSpecies.data.evolution_chain.url);
-
-      return evolutionChain.data;
-    },
-
-    recursiveSearch(data: any, evolutionChain: Array<EvolutionChain>) {
-      if (data[0].evolves_to.length > 0) {
-        axios.get('https://pokeapi.co/api/v2/pokemon/' + data[0].species.name).then((resp) => {
-          evolutionChain.push({ name: data[0].species.name, image: resp.data.sprites.other.dream_world.front_default, pokemonChainID: resp.data.id });
-          this.recursiveSearch(data[0].evolves_to, evolutionChain);
-        })
-      } else {
-        axios.get('https://pokeapi.co/api/v2/pokemon/' + data[0].species.name).then((resp) => {
-          evolutionChain.push({ name: data[0].species.name, image: resp.data.sprites.other.dream_world.front_default, pokemonChainID: resp.data.id });
-        })
-      }
-      return evolutionChain;
-    },
-
-    async handleEvolutionData() {
-      const evolutionChain: Array<EvolutionChain> = []
-
-      const evolutionData = await this.getEvolutionData();
-      const evolutionFinalArray = this.recursiveSearch([evolutionData.chain], evolutionChain)
-
-      return evolutionFinalArray;
-    }
-  },
-
-  created() {
-    this.handleEvolutionData().then((result: Array<EvolutionChain>) => {
-      console.log(result);
-      this.evolutionList = result;
-    })
+  //   finalArray():any{
+  //     const evolutionArray:EvolutionChain[] = []
+  //     this.Evolution!.map((resp: any) => {
+  //       evolutionArray.push({name: resp.name, image: resp.image, pokemonChainID: resp.pokemonChainID})
+  //     })
+  //     console.log(evolutionArray)
+  //     return evolutionArray;
+  //   }
+  // }
+  async mounted() {
+    // for await (const value of this.test()) {
+    //   values.push(v);
+    // }
+    this.evolutionArray = [...this.Evolution];
   }
 })
 </script>
@@ -82,6 +52,8 @@ export default defineComponent({
 <style scoped>
 .space-items {
   margin-right: 10px;
+  width: 100px;
+  height: 100px;
 }
 
 .main-frame {

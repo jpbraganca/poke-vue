@@ -36,7 +36,7 @@
         <el-col :xs="24" :sm="12" :md="{span:7, offset: 12}" class="stats-section-col">
           <div class="evolution-section">
             <h2 class="section-label">Evolution</h2>
-            <Evolution :pokemonId="item.id"/>
+            <Evolution v-if="item.evolution" :Evolution="[...item.evolution]"/>
           </div>
         </el-col>
       </el-row>
@@ -59,6 +59,12 @@ import { PokemonArray } from '../services/ApiRequest'
 
 //Data import
 // import { PokemonArray } from '../services/ApiRequest'
+
+type EvolutionChain = {
+  name: string;
+  image: string;
+  pokemonChainID: number;
+}
 
 export default defineComponent({
   data() {
@@ -85,14 +91,46 @@ export default defineComponent({
     async getData() {
       const { data } = await axios.get("https://pokeapi.co/api/v2/pokedex/2");
       data.pokemon_entries.map(async (pokemon:any) => {
-        const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon/' + pokemon.entry_number)
-        this.Pokemon.push(data);
+        const pokemonResp = await axios.get('https://pokeapi.co/api/v2/pokemon/' + pokemon.entry_number)
+        const evolutionChainData = await this.handleEvolutionData(pokemonResp.data.id)
+
+        this.Pokemon.push({...pokemonResp.data, evolution: evolutionChainData});
       });
+
+      console.log(this.Pokemon)
+    },
+
+     async getEvolutionData(pokemonId:number) {
+
+      const pokemonSpecies = await axios.get('https://pokeapi.co/api/v2/pokemon-species/' + pokemonId);
+      const evolutionChain = await axios.get(pokemonSpecies.data.evolution_chain.url);
+
+      return evolutionChain.data;
+    },
+
+    evolutionRecursiveSearch(data: any, evolutionChain: Array<EvolutionChain>) {
+      if (data[0].evolves_to.length > 0) {
+        axios.get('https://pokeapi.co/api/v2/pokemon/' + data[0].species.name).then((resp) => {
+          evolutionChain.push({ name: data[0].species.name, image: resp.data.sprites.other.dream_world.front_default, pokemonChainID: resp.data.id });
+          this.evolutionRecursiveSearch(data[0].evolves_to, evolutionChain);
+        })
+      } else {
+        axios.get('https://pokeapi.co/api/v2/pokemon/' + data[0].species.name).then((resp) => {
+          evolutionChain.push({ name: data[0].species.name, image: resp.data.sprites.other.dream_world.front_default, pokemonChainID: resp.data.id });
+        })
+      }
+      return evolutionChain;
+    },
+
+    async handleEvolutionData(pokemonId:number) {
+      const evolutionData = await this.getEvolutionData(pokemonId);
+      const evolutionFinalArray:EvolutionChain[] = this.evolutionRecursiveSearch([evolutionData.chain], [] as EvolutionChain[])
+
+      return evolutionFinalArray;
     }
   },
 
   mounted() {
-    console.log(PokemonArray)
     this.getData();
   }
 })
