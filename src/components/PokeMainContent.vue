@@ -1,46 +1,53 @@
 <template>
   <el-main>
-    <div v-for="item in sortedArray" :key="item.id">
-      <el-row align="middle" justify="center">
-        <el-col>
-          <div :key="item.id" class="pokemon-number">{{ item.id }}</div>
-        </el-col>
-      </el-row>
-      <el-row align="middle" justify="center">
-        <el-col>
-          <div :key="item.id" class="pokemon-name">{{ item.name.replace(/(\b[a-z](?!\s))/g, (c) => c.toUpperCase()) }}</div>
-        </el-col>
-      </el-row>
-      <el-row align="middle" justify="start" class="stats-row" :gutter="30">
-        <el-col :xs="24" :sm="12" :md="{span:10, offset: 2}" class="image-col">
-            <img :src="item.sprites.other.dream_world.front_default"/>
+    <el-carousel height="700px" arrow="always" direction="horizontal" :autoplay="false" indicator-position="none" v-if="this.Pokemon.length >= 151">
+      <el-carousel-item v-for="item in sortedArray" :key="item.id">
+        <el-row align="middle" justify="center">
+          <el-col>
+            <div :key="item.id" class="pokemon-number">{{ item.id }}</div>
+          </el-col>
+        </el-row>
+        <el-row align="middle" justify="center">
+          <el-col>
+            <div
+              :key="item.id"
+              class="pokemon-name"
+            >{{ item.name.replace(/(\b[a-z](?!\s))/g, (c) => c.toUpperCase()) }}</div>
+          </el-col>
+        </el-row>
+        <el-row align="middle" justify="start" class="stats-row" :gutter="30">
+          <el-col :xs="24" :sm="12" :md="{span:10, offset: 2}" class="image-col">
+            <img :src="item.sprites.other.dream_world.front_default" />
             <div class="type-tag pokemon-name">
-              <TypeTag :Types="item.types"/>
+              <TypeTag :Types="item.types" />
             </div>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" class="stats-section-col">
-          <div class="standard-config">
-            <GeneralStats :Stats="{Height: item.height, Weight: item.weight, BaseXP: item.base_experience}"/>
-          </div>
-          <h2 class="section-label">Abilities</h2>
-          <div class="standard-config">
-            <AbilityStats :Ability="item.abilities"/>
-          </div>
-          <h2 class="section-label">Stats</h2>
-          <div class="standard-config" style="margin-bottom: 0px;">
-            <StatsValueDisplay  :statsData="item.stats" />
-          </div>
-        </el-col>
-      </el-row>
-      <el-row align="top">
-        <el-col :xs="24" :sm="12" :md="{span:7, offset: 12}" class="stats-section-col">
-          <div class="evolution-section">
-            <h2 class="section-label">Evolution</h2>
-            <Evolution v-if="item.evolution" :Evolution="[...item.evolution]"/>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" class="stats-section-col">
+            <div class="standard-config">
+              <GeneralStats
+                :Stats="{Height: item.height, Weight: item.weight, BaseXP: item.base_experience}"
+              />
+            </div>
+            <h2 class="section-label">Abilities</h2>
+            <div class="standard-config">
+              <AbilityStats :Ability="item.abilities" />
+            </div>
+            <h2 class="section-label">Stats</h2>
+            <div class="standard-config" style="margin-bottom: 0px;">
+              <StatsValueDisplay :statsData="item.stats" />
+            </div>
+          </el-col>
+        </el-row>
+        <el-row align="top">
+          <el-col :xs="24" :sm="12" :md="{span:7, offset: 12}" class="stats-section-col">
+            <div class="evolution-section">
+              <h2 class="section-label">Evolution</h2>
+              <Evolution v-if="item.evolution" :Evolution="[...item.evolution]" />
+            </div>
+          </el-col>
+        </el-row>
+      </el-carousel-item>
+    </el-carousel>
   </el-main>
 </template>
 
@@ -74,8 +81,8 @@ export default defineComponent({
   },
 
   computed: {
-    sortedArray():any {
-      return this.Pokemon.sort((a:any, b:any) => a.id - b.id);
+    sortedArray(): any {
+      return this.Pokemon.sort((a: any, b: any) => a.id - b.id);
     },
   },
 
@@ -90,17 +97,17 @@ export default defineComponent({
   methods: {
     async getData() {
       const { data } = await axios.get("https://pokeapi.co/api/v2/pokedex/2");
-      data.pokemon_entries.map(async (pokemon:any) => {
+      data.pokemon_entries.map(async (pokemon: any) => {
         const pokemonResp = await axios.get('https://pokeapi.co/api/v2/pokemon/' + pokemon.entry_number)
         const evolutionChainData = await this.handleEvolutionData(pokemonResp.data.id)
 
-        this.Pokemon.push({...pokemonResp.data, evolution: evolutionChainData});
+        this.Pokemon.push({ ...pokemonResp.data, evolution: evolutionChainData });
       });
 
       console.log(this.Pokemon)
     },
 
-     async getEvolutionData(pokemonId:number) {
+    async getEvolutionData(pokemonId: number) {
 
       const pokemonSpecies = await axios.get('https://pokeapi.co/api/v2/pokemon-species/' + pokemonId);
       const evolutionChain = await axios.get(pokemonSpecies.data.evolution_chain.url);
@@ -122,15 +129,15 @@ export default defineComponent({
       return evolutionChain;
     },
 
-    async handleEvolutionData(pokemonId:number) {
+    async handleEvolutionData(pokemonId: number) {
       const evolutionData = await this.getEvolutionData(pokemonId);
-      const evolutionFinalArray:EvolutionChain[] = this.evolutionRecursiveSearch([evolutionData.chain], [] as EvolutionChain[])
+      const evolutionFinalArray: EvolutionChain[] = this.evolutionRecursiveSearch([evolutionData.chain], [] as EvolutionChain[])
 
       return evolutionFinalArray;
     }
   },
 
-  mounted() {
+  created() {
     this.getData();
   }
 })
@@ -217,7 +224,8 @@ h2 {
 }
 
 @media (max-width: 960px) {
-  .stats-section-col, .evolution-section {
+  .stats-section-col,
+  .evolution-section {
     align-items: center;
     justify-content: center;
   }

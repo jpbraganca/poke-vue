@@ -1,8 +1,8 @@
 <template>
   <div class="main-frame">
-    <div class="pokemon-evolution" v-for="(pokemon, name) in Evolution" :key="name">
-      <img :src="pokemon.image" class="space-items" />
-      <span>{{pokemon.name}}</span>
+    <div class="pokemon-evolution" v-for="(pokemon, index) in Evolution" :key="index">
+      <el-image :src="pokemon.image" class="space-items" />
+      <span>{{pokemon.name.replace(/(\b[a-z](?!\s))/g, (c) => c.toUpperCase())}}</span>
     </div>
   </div>
 </template>
@@ -40,18 +40,11 @@ export default defineComponent({
   //     return evolutionArray;
   //   }
   // }
-  async mounted() {
-    // for await (const value of this.test()) {
-    //   values.push(v);
-    // }
-    this.evolutionArray = [...this.Evolution];
-  }
 })
 </script>
 
 <style scoped>
 .space-items {
-  margin-right: 10px;
   width: 100px;
   height: 100px;
 }
@@ -73,6 +66,7 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 15px 35px 0px 0px;
 }
 
 @media (max-width: 960px) {

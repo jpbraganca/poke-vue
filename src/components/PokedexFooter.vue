@@ -1,6 +1,6 @@
 <template>
   <el-footer height="120px" class="footer-frame">
-    <span class="made-by">Made by <a href="https://github.com/jpbraganca">@jpbraganca</a></span>
+    <span class="made-by">Made by <el-link href="https://github.com/jpbraganca" type="danger" ta>@jpbraganca</el-link></span>
   </el-footer>
 </template>
 
