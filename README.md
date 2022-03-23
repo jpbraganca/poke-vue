@@ -5,6 +5,7 @@
     <img src="https://img.icons8.com/fluency/96/000000/figma.png"/>
 </a>
 </div>
+
 ## Project setup
 ```
 npm install
