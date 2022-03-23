@@ -1,8 +1,8 @@
 # Pokedex Vue
     A simple Pokedex made with vue3 + [ElementUI](https://element-plus.org/en-US/)
-<div align="center">
+[<div align="center">
 <img src="https://img.icons8.com/fluency/96/000000/figma.png"/>
-</div>(https://www.figma.com/file/DFYAI1jv6hQAcgy7c8kqZc/PokeVue?node-id=0%3A1)
+</div>](https://www.figma.com/file/DFYAI1jv6hQAcgy7c8kqZc/PokeVue?node-id=0%3A1)
 
 ## Project setup
 ```
