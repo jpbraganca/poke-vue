@@ -22,7 +22,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .ability-display {
   font-family: "Montserrat", sans-serif;
   font-size: 14px;

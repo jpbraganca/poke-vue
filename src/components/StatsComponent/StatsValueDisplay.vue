@@ -50,7 +50,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .stats-label {
   height: 50%;
   width: 100%;

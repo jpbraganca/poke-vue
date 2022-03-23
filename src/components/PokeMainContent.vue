@@ -1,10 +1,17 @@
 <template>
   <el-main>
-    <el-carousel height="700px" arrow="always" direction="horizontal" :autoplay="false" indicator-position="none" v-if="this.Pokemon.length >= 151">
+    <el-carousel
+      height="700px"
+      arrow="always"
+      direction="horizontal"
+      :autoplay="false"
+      indicator-position="none"
+      v-if="this.Pokemon.length >= 151"
+    >
       <el-carousel-item v-for="item in sortedArray" :key="item.id">
         <el-row align="middle" justify="center">
           <el-col>
-            <div :key="item.id" class="pokemon-number">{{ item.id }}</div>
+            <div :key="item.id" class="pokemon-number">#{{ String(item.id).padStart(3, '0') }}</div>
           </el-col>
         </el-row>
         <el-row align="middle" justify="center">
@@ -62,10 +69,6 @@ import AbilityStats from './StatsComponent/AbilityStats.vue'
 import StatsValueDisplay from './StatsComponent/StatsValueDisplay.vue'
 import Evolution from './StatsComponent/EvolutionComponent.vue'
 import TypeTag from './StatsComponent/TypeTag.vue'
-import { PokemonArray } from '../services/ApiRequest'
-
-//Data import
-// import { PokemonArray } from '../services/ApiRequest'
 
 type EvolutionChain = {
   name: string;
@@ -143,78 +146,72 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$color_1: #525252;
+$color_2: #626262;
+$font-family_1: "Montserrat", sans-serif;
+
 h2 {
-  font-family: "Montserrat", sans-serif;
+  font-family: $font-family_1;
 }
 .el-col {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .pokemon-name {
-  font-family: "Montserrat", sans-serif;
+  font-family: $font-family_1;
   font-weight: 600;
   font-size: 40px;
-  color: #525252;
+  color: $color_1;
   text-shadow: 0px 4px 7px rgba(0, 0, 0, 0.25);
 }
-
 .pokemon-number {
-  font-family: "Montserrat", sans-serif;
+  font-family: $font-family_1;
   font-size: 24px;
-  color: #626262;
+  color: $color_2;
   font-weight: 300;
   padding-top: 20px;
   padding-bottom: 20px;
   text-shadow: 0px 4px 7px rgba(0, 0, 0, 0.25);
 }
-
 .stats-row {
   padding-top: 50px;
   padding-bottom: 25px;
 }
-
 .stats-section-col {
   display: flex;
   justify-content: start;
   align-items: flex-start;
   flex-direction: column;
 }
-
 .type-tag {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #525252;
+  color: $color_1;
   margin-bottom: 20px;
 }
-
 .section-label {
-  color: #525252;
+  color: $color_1;
   margin-bottom: 9px;
 }
-
 .standard-config {
   display: flex;
   justify-content: start;
   align-items: center;
   margin-bottom: 15px;
 }
-
 .image-col {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  img {
+    width: 267px;
+    height: 267px;
+  }
 }
-
-.image-col > img {
-  width: 267px;
-  height: 267px;
-}
-
 .evolution-section {
   display: flex;
   align-items: flex-start;
@@ -222,9 +219,11 @@ h2 {
   flex-direction: column;
   margin-left: 5px;
 }
-
 @media (max-width: 960px) {
-  .stats-section-col,
+  .stats-section-col {
+    align-items: center;
+    justify-content: center;
+  }
   .evolution-section {
     align-items: center;
     justify-content: center;

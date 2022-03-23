@@ -43,24 +43,25 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$color_1: #525252;
+$font-family_1: "Montserrat", sans-serif;
+
 .space-items {
   width: 100px;
   height: 100px;
 }
-
 .main-frame {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: start;
-  font-family: "Montserrat", sans-serif;
+  font-family: $font-family_1;
   font-size: 14px;
   font-weight: 600;
   text-align: center;
-  color: #525252;
+  color: $color_1;
 }
-
 .pokemon-evolution {
   display: flex;
   flex-direction: column;
@@ -68,28 +69,28 @@ export default defineComponent({
   justify-content: center;
   margin: 15px 35px 0px 0px;
 }
-
 @media (max-width: 960px) {
-  .main-frame > img {
-    width: 80px;
-    height: 80px;
-  }
-
-  .main-frame > Icon {
-    width: 24px;
-    height: 24px;
+  .main-frame {
+    img {
+      width: 80px;
+      height: 80px;
+    }
+    > Icon {
+      width: 24px;
+      height: 24px;
+    }
   }
 }
-
 @media (min-width: 992px) {
-  .main-frame > img {
-    width: 122px;
-    height: 122px;
-  }
-
-  .main-frame > Icon {
-    width: 48px;
-    height: 48px;
+  .main-frame {
+    img {
+      width: 122px;
+      height: 122px;
+    }
+    Icon {
+      width: 48px;
+      height: 48px;
+    }
   }
 }
 </style>

@@ -60,7 +60,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .main-frame {
   display: flex;
   align-items: center;
